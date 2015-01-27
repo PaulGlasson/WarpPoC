@@ -1,11 +1,19 @@
 ﻿
+using System;
+using System.ComponentModel.DataAnnotations;
 namespace Warp.Core.Services.Dtos.TextResources
 {
-    public class SaveTextResourceDto
+    public class SaveTextResourceDto : DtoBase
     {
+        [Required]
         public string ResourceString { get; set; }
-        public string ResourceCode { get; set; }
-        public int LanguageId { get; set; }
+        [Required]
+        public string ResourceIdentifierCode { get; set; }
+        [Required]
+        public Guid LanguageId { get; set; }
+        [Required]
         public bool ClientOverridable { get; set; }
+        [Required]
+        public Guid ClientId { get; set; }
     }
 }

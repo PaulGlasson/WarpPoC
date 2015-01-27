@@ -10,6 +10,7 @@ namespace Warp.Data.Queries.TextResources
     public sealed class GetTextResourceQuery : IQuery<string>
     {
         public Guid TextResourceIdentifierId { get; set; }
+        public Guid LanguageId { get; set; }
     }
 
     public class GetTextResourceQueryValidator : AbstractValidator<GetTextResourceQuery>
@@ -17,6 +18,7 @@ namespace Warp.Data.Queries.TextResources
         public GetTextResourceQueryValidator()
         {
             RuleFor(q => q.TextResourceIdentifierId).NotEmptyGuid();
+            RuleFor(q => q.LanguageId).NotEmptyGuid();
         }
     }
 
@@ -33,7 +35,7 @@ namespace Warp.Data.Queries.TextResources
         {
             // TODO: JK -> PG Does this need to filter on language too?
             return _context.TextResources
-                    .Where(t => t.TextResourceIdentifier.Id == query.TextResourceIdentifierId)
+                    .Where(t => t.TextResourceIdentifier.Id == query.TextResourceIdentifierId && t.LanguageId == query.LanguageId)
                     .Select(t => t.ResourceString)
                     .SingleOrDefault();
         }

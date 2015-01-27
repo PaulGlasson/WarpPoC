@@ -1,5 +1,5 @@
-﻿using Warp.Core.Attributes;
-
+﻿
+using Warp.Core.Attributes;
 namespace Warp.Testing.Unit.Services.TextResources.Fakes
 {
     public class TestModelFake

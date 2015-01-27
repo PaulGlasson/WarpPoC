@@ -1,11 +1,17 @@
 ﻿using System;
-using Warp.Core.Infrastructure.AutoMapper;
+using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Warp.Core.Cqrs;
+using Warp.Core.Infrastructure.AutoMapper;
 using Warp.Core.Infrastructure.Util;
+using Warp.Core.Services.Dtos;
 using Warp.Core.Services.Dtos.TextResources;
 using Warp.Core.Services.TextResourceService;
 using Warp.Core.Services.UserService;
+using Warp.Data.Commands.Clients;
+using Warp.Data.Commands.TextResources;
 using Warp.Data.Queries.TextResources;
+using Warp.Core.Services;
 
 namespace Warp.Services
 {
@@ -48,6 +54,7 @@ namespace Warp.Services
 
             var textResourceString = _dispatcher.Execute(new GetTextResourceStringQuery { TextResourceIdentifierId = textResourceIdentifierId });
 
+            //CheckArgument.NotEmpty(textResourceString, "textResourceString");
             if (String.IsNullOrWhiteSpace(textResourceString))
             {
                 return null;
@@ -55,13 +62,13 @@ namespace Warp.Services
 
             return new ResourceStringDto
             {
-                TextResourceString = textResourceString
+                ResourceString = textResourceString
             };
         }
 
-        public ResourceCodeDto GetTextResourceCode(Guid textResourceCodeId)
+        public ResourceCodeDto GetResourceIdentifierCode(Guid textResourceCodeId)
         {
-            CheckArgument.NotEmptyGuid(textResourceCodeId, "textResourceCodeId");
+            CheckArgument.NotEmptyGuid(textResourceCodeId, textResourceCodeId.ToString());
 
             string textResourceCode = _dispatcher.Execute(new GetTextResourceCodeQuery { TextResourceCodeId = textResourceCodeId });
 
@@ -69,44 +76,111 @@ namespace Warp.Services
 
             return new ResourceCodeDto
             {
-                TextResourceCode = textResourceCode
+                ResourceIdentifierCode = textResourceCode
             };
         }
 
-        public void SaveResource(SaveTextResourceDto saveTextResourceDto)
+        public void SaveTextResource(SaveTextResourceDto dto)  //return IResponse<TextResourceDetailDto>
         {
-            //    CheckArgument.NotNull(saveTextResourceDto, "saveTextResourceDto");
+            #region Validation  Cycle
+
+            CheckArgument.NotNull(dto, "SaveTextResourceDto");
+
+            /// Validation cycle
+            /// Validate ResourceString
+            var IsResourceStringUnique = _dispatcher.Execute(new CheckIsResourceStringUniqueQuery
+            {
+                ResourceString = dto.ResourceString,
+                UserLanguageId = dto.LanguageId,
+                ClientId = dto.ClientId,
+                ClientOverridable = dto.ClientOverridable
+            });
+
+            /// If not unique, then return associated data
+            if (!IsResourceStringUnique)
+            {
+                /// Return associated TextResource data
+                var resourceStringAssigned = _dispatcher.Execute(new GetAssociatedTextResourceDataQuery
+                {
+                    ResourceString = dto.ResourceString
+                });
+            }
 
 
-            //var stringExists = _dispatcher.Execute(DuplicateResourceStringExistsQuery);
+            /// Validate ResourceIdentifierCode
+            bool IsResourceIdentifierCodeUnique = _dispatcher.Execute(new CheckIsResourceIdentifierCodeUniqueQuery
+            {
+                ResourceIdentifierCode = dto.ResourceIdentifierCode
+            });
 
+            if (!IsResourceIdentifierCodeUnique)
+            {
 
-            //var codeExists = ValidateResourceCode(new TextResourceCodeDto { TextResourceCode = model.TextResourceCode });
-
-            // Inverted check. If both true then neither phrases exist in the database so safe to save and commit new TextResource
-            //if (!(_dispatcher.Execute(textResourceStringQuery)) && !(_dispatcher.Execute(textResourceCodeQuery)))
+            }
+            else
+            {
+                
+            }
+            // Sweet path. ResourceIdentifierCode and ResourceString are unassigned and unique
+            //if (!IsResourceStringUnique && !IsResourceIdentifierCodeUnique)
             //{
-
+            //    var associatedData =
+            //        _dispatcher.Execute<SaveTextResourceCommand>();
             //}
 
 
-            // Verify that the TextResourceString to Save does not already exist.
-            //  If it exists, Query both tables for associated data and return DTO to User
-            // Verify that the TextResourceCode has not already been assigned to another TextResourceString
+
+            
+            #endregion Validation  Cycle
+
+            #region Save Cycle
+            // Yes. Continue with Save.  
+
+            // New Resource
+            //if (saveTextResourceDto.Id == 0)
+            //{
+            //    var command = _objectMapper.Map<SaveTextResourceDto, SaveTextResourceCommand>(saveTextResourceDto);
+
+            //    _dispatcher.Execute(command);
+
+            //    saveTextResourceDto.Id = command.Id;
+            //}
+            //// Update existing Resource
+            //else
+            //{
+            //    var command = _objectMapper.Map<SaveTextResourceDto, UpdateTextResourceCommand>(saveTextResourceDto);
+            //    _dispatcher.Execute(command);
+            //}
+            //var stringExists = _dispatcher.Execute(DuplicateResourceStringExistsQuery);
+            //if (!(_dispatcher.Execute(textResourceStringQuery)) && !(_dispatcher.Execute(textResourceCodeQuery)))
+
+
+            #endregion Save Cycle
+
+            //return new ServiceResponse<TextResourceDetailDto>(associatedData, false);
         }
 
-
-        public bool ValidateResourceString(ResourceStringDto dto)
+        protected bool ValidateResourceString(SaveTextResourceDto dto)
         {
-            return true; //_dispatcher.Execute(DuplicateResourceStringExistsQuery(dto));
+            bool result = false;
+
+            return result;
         }
 
-        public bool ValidateResourceCode(ResourceCodeDto dto)
+        protected bool ValidateResourceCode(SaveTextResourceDto dto)
         {
-            throw new NotImplementedException();
-        }
+            bool result = false;
 
+            return result;
+        }
 
         #endregion Next
+
+        public bool InitializeTextResourceCache(Guid languageId, Guid clientId)
+        {
+            // InitResourceCacheQuery
+
+            throw new NotImplementedException();
+        }
     }
 }

@@ -106,14 +106,17 @@
     <Compile Include="Services\Dtos\Client\ClientDto.cs" />
     <Compile Include="Services\Dtos\Client\DtoBase.cs" />
     <Compile Include="Services\Dtos\ContactAddressAssignedDto - Copy.cs" />
+    <Compile Include="Services\Dtos\DtoBase.cs" />
+    <Compile Include="Services\Dtos\TextResources\ResourceIdentifierDetailDto.cs" />
+    <Compile Include="Services\Dtos\TextResources\TextResourceDetailDto.cs" />
     <Compile Include="Services\Dtos\Users\UserDto.cs" />
     <Compile Include="Services\Dtos\Customer\CustomerDto.cs" />
     <Compile Include="Services\ICustomerService.cs" />
     <Compile Include="Services\Dtos\TextResources\GetTextResourceDto.cs" />
-    <Compile Include="Services\Dtos\TextResources\LanguageDto.cs" />
-    <Compile Include="Services\Dtos\TextResources\LanguageIdDto.cs" />
+    <Compile Include="Services\Dtos\Languages\LanguageDto.cs" />
+    <Compile Include="Services\Dtos\Languages\LanguageIdDto.cs" />
     <Compile Include="Services\Dtos\TextResources\SaveTextResourceDto.cs" />
-    <Compile Include="Services\Dtos\TextResources\SessionLanguageResolvedDto.cs" />
+    <Compile Include="Services\Dtos\Languages\SessionLanguageResolvedDto.cs" />
     <Compile Include="Services\Dtos\TextResources\ResourceCodeDto.cs" />
     <Compile Include="Services\Dtos\TextResources\TextResourceDto.cs" />
     <Compile Include="Services\Dtos\TextResources\ResourceStringDto.cs" />
@@ -130,6 +133,7 @@
     <Compile Include="Services\IBrandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\Util\CheckArgument.cs" />
+    <Compile Include="Validation\IValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -7,8 +7,8 @@ namespace Warp.WebUI.Controllers
 {
     public partial class TextResourceController : Controller
     {
-        private readonly IObjectMapper _objectMapper;
-        private readonly ITextResourceService _textResourceService;
+        readonly IObjectMapper _objectMapper;
+        readonly ITextResourceService _textResourceService;
 
         public TextResourceController(IObjectMapper objectMapper, ITextResourceService textResourceService)
         {
@@ -26,6 +26,24 @@ namespace Warp.WebUI.Controllers
         //{
         //    if (ModelState.IsValid)
         //    {
+        //        if (!model.ForceAdd)
+        //        {
+        //            if (_textResourceService.CheckResourceCodeExists(model.TextResourceCode))
+        //            {
+        //                ModelState.AddModelError("", "Text resource code already exists - please tick Force Add.");
+        //                // return associated TextResource data model
+        //            }
+        //            else if (_textResourceService.CheckResourceStringExists(model.TextResourceString))
+        //            {
+        //                ModelState.AddModelError("", "Text resource string already exists - please tick Force Add.");
+        //                // return  associated TextResourceIdentifier data model
+        //            }
+        //            else
+        //            {
+        //                // Sweet path
+        //            }
+        //        }
+
         //        var dto = _mappingEngine.Map<TextResourceViewModel, SaveTextResourceDto>(model);
 
         //        _textResourceService.SaveResource(dto);
